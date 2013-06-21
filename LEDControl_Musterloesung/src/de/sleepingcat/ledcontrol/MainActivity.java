@@ -78,8 +78,7 @@ public class MainActivity extends Activity implements ConnectionEstablishedListe
 			public void onStartTrackingTouch(SeekBar seekBar) {
 			}
 			
-			public void onProgressChanged(SeekBar seekBar, int progress,
-					boolean fromUser) {
+			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 				
 				if(socket == null) {
 					Toast.makeText(MainActivity.this, "Keine Verbindung mit LED", Toast.LENGTH_SHORT).show();
