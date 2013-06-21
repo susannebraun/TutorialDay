@@ -1,0 +1,9 @@
+<resources>
+
+    <string name="app_name">LEDControl</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="menu_settings">Settings</string>
+    <string name="title_activity_main">LED Control</string>
+    <string name="ip_addr_textview_hint">IP-Addresse oder Hostname</string>
+
+</resources>

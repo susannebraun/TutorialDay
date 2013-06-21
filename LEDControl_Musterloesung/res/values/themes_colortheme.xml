@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- Generated with http://android-holo-colors.com -->
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+  <style name="ColorTheme" parent="android:Theme.Light">
+
+    <item name="android:editTextStyle">@style/EditTextColorTheme</item>
+
+    <item name="android:autoCompleteTextViewStyle">@style/AutoCompleteTextViewColorTheme</item>
+
+    <item name="android:checkboxStyle">@style/CheckBoxColorTheme</item>
+
+    <item name="android:radioButtonStyle">@style/RadioButtonColorTheme</item>
+
+    <item name="android:buttonStyle">@style/ButtonColorTheme</item>
+
+    <item name="android:imageButtonStyle">@style/ImageButtonColorTheme</item>
+
+    <item name="android:spinnerStyle">@style/SpinnerColorTheme</item>
+
+    <item name="android:dropDownSpinnerStyle">@style/SpinnerColorTheme.DropDown</item>
+
+    <item name="android:spinnerDropDownItemStyle">@style/SpinnerDropDownItemColorTheme</item>
+
+    <item name="android:progressBarStyleHorizontal">@style/ProgressBarColorTheme</item>
+
+    <item name="android:seekBarStyle">@style/SeekBarColorTheme</item>
+
+    <item name="android:buttonStyleToggle">@style/ToggleColorTheme</item>
+
+    <item name="android:listViewStyle">@style/ListViewColorTheme</item>
+
+    <item name="android:listViewWhiteStyle">@style/ListViewColorTheme.White</item>
+
+    <item name="android:spinnerItemStyle">@style/SpinnerItemColorTheme</item>
+
+  </style>
+
+</resources>
