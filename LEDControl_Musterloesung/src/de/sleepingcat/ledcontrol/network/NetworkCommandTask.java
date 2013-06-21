@@ -1,8 +1,6 @@
 package de.sleepingcat.ledcontrol.network;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -20,63 +18,46 @@ public class NetworkCommandTask extends AsyncTask<String, Integer, Boolean> {
 	
 	
 
-	public NetworkCommandTask(Socket mySocket) {
+	public NetworkCommandTask(Socket socket, NetworkCommandListener listener) {
 		super();
-		this.mySocket = mySocket;
+		this.mySocket = socket;
+		this.myListener = listener;
 	}
 
 	@Override
 	protected Boolean doInBackground(String... cmd) {
-		if(cmd == null || cmd.length != 1) {
+		if (cmd == null || cmd.length != 1) {
 			return false;
 		}
-		
-		if(mySocket != null && mySocket.isConnected()) {
-			
-	    	PrintWriter out = null;
-	    	BufferedReader in = null;
-	    	try {
-	    		 	// fire and forget style!
-	    		   out = new PrintWriter(mySocket.getOutputStream(), true);
-	    		   out.write(cmd[0]);
-	    		   out.write("\n");
-	    		   out.flush();
-	    		   
-	    		   
-//	    		   in = new BufferedReader(new InputStreamReader(mySocket.getInputStream()));
-//	    		   String response =  in.readLine();
-//	    		   if("OK".equals(response)) {
-	    			   return true;
-//	    		   }
-	    		   
-	    	} catch(UnknownHostException e) {
-	    		   Log.e(LOG_TAG, "Failed to send cmd to LED.", e);
-	    	} catch(IOException e) {
-	    			Log.e(LOG_TAG, "Failed to send cmd to LED.", e);
-			} finally {
-//				if (out != null) {
-//					out.close();
-//				}
-//				if (in != null) {
-//					try {
-//						in.close();
-//					} catch (IOException e) {
-//						Log.e(LOG_TAG, "Failed to close input stream.", e);
-//					}
-//				}
+
+		if (mySocket != null && mySocket.isConnected()) {
+			PrintWriter out = null;
+			try {
+				// fire and forget style!
+				out = new PrintWriter(mySocket.getOutputStream(), true);
+				out.write(cmd[0]);
+				out.write("\n");
+				out.flush();
+
+				return true;
+
+			} catch (UnknownHostException e) {
+				Log.e(LOG_TAG, "Failed to send cmd to LED.", e);
+			} catch (IOException e) {
+				Log.e(LOG_TAG, "Failed to send cmd to LED.", e);
 			}
-		
-		} 
-		
-			// error!
-			if(mySocket != null) {
-				try {
-					mySocket.close();
-				} catch (IOException e) {
-					Log.w(LOG_TAG, "Failed to close socket.", e);
-				}
+
+		}
+
+		// error!
+		if (mySocket != null) {
+			try {
+				mySocket.close();
+			} catch (IOException e) {
+				Log.w(LOG_TAG, "Failed to close socket.", e);
 			}
-		
+		}
+
 		return false;
 	}
 

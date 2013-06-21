@@ -7,7 +7,6 @@ import java.util.concurrent.Executors;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -18,8 +17,9 @@ import android.widget.Toast;
 import de.sleepingcat.ledcontrol.network.ConnectionManagementTask;
 import de.sleepingcat.ledcontrol.network.ConnectionManagementTask.ConnectionEstablishedListener;
 import de.sleepingcat.ledcontrol.network.NetworkCommandTask;
+import de.sleepingcat.ledcontrol.network.NetworkCommandTask.NetworkCommandListener;
 
-public class MainActivity extends Activity implements ConnectionEstablishedListener {
+public class MainActivity extends Activity implements ConnectionEstablishedListener, NetworkCommandListener {
 	
 	private static final String LOG_TAG = "MainActivity";
 	
@@ -31,7 +31,6 @@ public class MainActivity extends Activity implements ConnectionEstablishedListe
 	private SeekBar lightnessSeekbar;
 	
 	private Button connectButton;
-	
 	
 	private Socket socket;
 	
@@ -60,18 +59,8 @@ public class MainActivity extends Activity implements ConnectionEstablishedListe
 					connectionMgmtTask.execute(hostSpec, port);
 				
 				} else {
-					final Socket finalSocket = socket;
-					onError();
-					(new Handler()).post(new Runnable() {
-						
-						public void run() {
-							try {
-								finalSocket.close();
-							} catch (IOException e) {
-								Log.e(LOG_TAG, "Failed to close socket", e);
-							}
-						}
-					});
+					disconnect();
+					socket = null;
 				}
 			}
 		});
@@ -91,24 +80,19 @@ public class MainActivity extends Activity implements ConnectionEstablishedListe
 			
 			public void onProgressChanged(SeekBar seekBar, int progress,
 					boolean fromUser) {
-				// TODO: SB show value in Text field!
+				
 				if(socket == null) {
-					Toast.makeText(MainActivity.this, "Keine Verbindung mit LED", Toast.LENGTH_SHORT);
+					Toast.makeText(MainActivity.this, "Keine Verbindung mit LED", Toast.LENGTH_SHORT).show();
 					return;
 				}
 				Log.d(LOG_TAG, "Brightness: "+progress);
-				NetworkCommandTask netTask = new NetworkCommandTask(socket);
+				NetworkCommandTask netTask = new NetworkCommandTask(socket, MainActivity.this);
 				netTask.executeOnExecutor(executor, String.valueOf(progress));
 			}
 		});
        
     }
     
-    
-
-   
-
-
 
 	@Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -121,12 +105,30 @@ public class MainActivity extends Activity implements ConnectionEstablishedListe
 		this.connectButton.setText("Trennen");
 		this.socket = socketConnection;
 		this.lightnessSeekbar.setEnabled(true);
+		this.ipAddrOrHostnameEditText.setEnabled(false);
+		this.portEditText.setEnabled(false);
+	}
+
+	
+	public void onError() {
+		disconnect();
+		
+		Toast.makeText(MainActivity.this, "Keine Verbindung mit LED", Toast.LENGTH_SHORT).show();
 	}
 
 
-	public void onError() {
+	private void disconnect() {
+		if(socket != null && socket.isConnected()) {
+			try {
+				socket.close();
+			} catch (IOException e) {
+				Log.e(LOG_TAG, "Failed to close socket", e);
+			}
+		}
 		this.connectButton.setText("Verbinden");
 		this.socket = null;
 		this.lightnessSeekbar.setEnabled(false);
+		this.ipAddrOrHostnameEditText.setEnabled(true);
+		this.portEditText.setEnabled(true);
 	}
 }

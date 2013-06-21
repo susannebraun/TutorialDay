@@ -1,6 +1,7 @@
 package de.sleepingcat.ledcontrol.network;
 
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
@@ -32,7 +33,8 @@ public class ConnectionManagementTask extends AsyncTask<String, Integer, Socket>
 			String host = hostAndPort[0];
 			int port = Integer.valueOf(hostAndPort[1]);
 			
-			connection = new Socket(host, port);
+			connection = new Socket();
+			connection.connect(new InetSocketAddress(host, port), 3000);
 			
 		} catch(NumberFormatException e) {
 			// invalid port value...
